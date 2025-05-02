@@ -1,0 +1,32 @@
+services: #list of all the different apps
+  api:    #name for the service (1)
+    build: ./server #location of the Dockerfile
+    ports:  # ports to publish | like running `docker run -p 3000:3000` 
+      - 3000:3000
+  client: #name for the service (2)
+    build: ./client
+    ports:
+      - 1234:1234
+  db: # Database service
+    image: postgres:15-alpine # Use a PostgreSQL image
+    # volumes:
+    #   db_data: /var/lib/postgresql/data # Persist data
+    environment:
+      - POSTGRES_USER=myuser
+      - POSTGRES_PASSWORD=mypassword
+      - POSTGRES_DB=business_contacts
+    ports: #Expose the port if you want to access the database from your host.
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # Define the volume
+
+# important to run
+networks:
+  app-net:
+    driver: bridge
+
+# important to run
+volumes:
+  postgres_data:
+  # run with `docker-compose up`
+  # close with `docker-compose down --rmi all`
